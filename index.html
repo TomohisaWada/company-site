@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Skyline Technologies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ink:#0F2338;
+    --ink-soft:#4A6079;
+    --ink-faint:#84A0B4;
+    --paper:#EDF1F5;
+    --paper-raised:#FFFFFF;
+    --line:rgba(15,35,56,0.14);
+    --line-strong:rgba(15,35,56,0.28);
+    --horizon:#D9642F;
+    --horizon-deep:#B24D22;
+    --dawn:#F2A65C;
+    --dawn-soft:#F6C489;
+    --night-950:#0A1420;
+    --night-900:#12213A;
+    --night-850:#182B49;
+    --night-mist:#8CA0B8;
+    --night-text:#EDF2F6;
+    --maxw:1180px;
+    --font-display:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;
+    --font-body:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
+    --font-mono:"IBM Plex Mono","SFMono-Regular",ui-monospace,monospace;
+    color-scheme: light;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{
+    font-family:var(--font-display);
+    margin:0;
+    text-wrap:balance;
+    color:var(--ink);
+  }
+  p{margin:0;}
+  a{color:inherit;}
+  ul{margin:0;padding:0;list-style:none;}
+  section{padding-block:clamp(64px,9vw,112px);}
+  .wrap{max-width:var(--maxw);margin-inline:auto;padding-inline:24px;}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.16em;
+    text-transform:uppercase;color:var(--horizon-deep);
+    margin-bottom:14px;
+  }
+  .eyebrow::before{
+    content:"";width:8px;height:8px;border:1.4px solid currentColor;
+    transform:rotate(45deg);flex:none;
+  }
+  .on-dark .eyebrow{color:var(--dawn-soft);}
+  .h2{font-size:clamp(1.7rem,1.1rem + 2.2vw,2.6rem);font-weight:700;}
+  .lede{color:var(--ink-soft);font-size:1.05rem;max-width:56ch;margin-top:16px;}
+  .cut{
+    clip-path:polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--font-mono);font-size:0.85rem;letter-spacing:0.04em;
+    padding:14px 22px;border:1px solid transparent;cursor:pointer;
+    text-decoration:none;white-space:nowrap;
+  }
+  .btn-primary{background:var(--horizon);color:#fff;}
+  .btn-primary:hover{background:var(--horizon-deep);}
+  .btn-ghost{border-color:var(--line-strong);color:var(--ink);background:transparent;}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .on-dark .btn-ghost{border-color:rgba(237,242,246,0.32);color:var(--night-text);}
+  .on-dark .btn-ghost:hover{border-color:var(--night-text);}
+  .btn-arrow{transition:transform .2s ease;}
+  .btn:hover .btn-arrow{transform:translateX(3px);}
+
+  /* ---------- Nav ---------- */
+  .nav{
+    position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:50;
+    background:rgba(10,20,32,0.82);backdrop-filter:blur(10px);
+    border-bottom:1px solid rgba(237,242,246,0.1);
+  }
+  .nav .wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-block:14px;gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--night-text);}
+  .brand svg{flex:none;color:var(--dawn);}
+  .brand-name{font-family:var(--font-display);font-weight:700;font-size:1rem;letter-spacing:0.01em;}
+  .brand-jp{display:block;font-family:var(--font-mono);font-size:0.62rem;color:var(--night-mist);letter-spacing:0.06em;margin-top:2px;}
+  .nav-links{display:flex;align-items:center;gap:28px;}
+  .nav-links a{
+    font-size:0.85rem;color:var(--night-mist);text-decoration:none;
+    padding-block:4px;border-bottom:1px solid transparent;
+  }
+  .nav-links a:hover{color:var(--night-text);border-color:var(--dawn);}
+  .nav-cta{display:none;}
+  @media (min-width:860px){
+    .nav-links{display:flex;}
+    .nav-mobile-cta{display:none;}
+    .nav-cta{display:inline-flex;}
+  }
+  @media (max-width:859px){
+    .nav-links{display:none;}
+  }
+
+  /* ---------- Announce ---------- */
+  .announce{
+    border-top:1px solid rgba(237,242,246,0.12);
+    background:rgba(255,255,255,0.03);
+  }
+  .announce-inner{
+    display:flex;align-items:center;gap:18px;
+    padding-block:10px;
+  }
+  .announce-label{
+    flex:none;display:inline-flex;align-items:center;gap:7px;
+    font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.14em;
+    color:var(--dawn-soft);
+  }
+  .announce-label::before{
+    content:"";width:6px;height:6px;flex:none;
+    background:var(--horizon);border-radius:50%;
+  }
+  .announce-list{
+    display:flex;gap:32px;margin:0;padding:0;list-style:none;
+    overflow-x:auto;scrollbar-width:none;
+  }
+  .announce-list::-webkit-scrollbar{display:none;}
+  .announce-list li{
+    flex:none;display:flex;align-items:baseline;gap:10px;white-space:nowrap;
+    font-size:0.82rem;line-height:1;
+  }
+  .announce-list time{
+    font-family:var(--font-mono);font-size:0.72rem;color:var(--night-mist);
+  }
+  .announce-list li span:last-child{color:var(--night-text);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;padding-top:calc(168px + env(safe-area-inset-top,0px));
+    padding-bottom:0;overflow:hidden;
+    background:linear-gradient(180deg,
+      var(--night-950) 0%, #16243d 28%, #43334f 52%,
+      #c1603a 76%, #edA05c 90%, #f6c98d 100%);
+    color:var(--night-text);
+  }
+  .hero .wrap{position:relative;z-index:2;padding-bottom:48px;}
+  .hero-tag{
+    font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.1em;
+    color:var(--dawn-soft);margin-bottom:22px;display:flex;gap:10px;align-items:center;
+  }
+  .hero-tag span{opacity:0.6;}
+  .hero h1{
+    font-size:clamp(2.15rem,1.3rem + 4vw,4.4rem);font-weight:900;
+    line-height:1.28;letter-spacing:0.01em;
+    max-width:15ch;
+  }
+  .hero-lede{
+    margin-top:22px;color:rgba(237,242,246,0.82);font-size:1.05rem;
+    max-width:46ch;line-height:1.9;
+  }
+  .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px;}
+  .skyline{display:block;width:100%;height:auto;position:relative;z-index:1;}
+  .win{fill:var(--dawn);opacity:0.75;}
+  @media (prefers-reduced-motion:no-preference){
+    .win.blink{animation:blink 4.5s ease-in-out infinite;}
+    .win.blink2{animation:blink 6s ease-in-out infinite 1.2s;}
+    .beacon{animation:beacon 2.6s ease-in-out infinite;}
+  }
+  @keyframes blink{0%,100%{opacity:0.75;}50%{opacity:0.18;}}
+  @keyframes beacon{0%,100%{opacity:1;r:3.2;}50%{opacity:0.35;r:2.2;}}
+
+  /* ---------- Blueprint texture (light sections) ---------- */
+  .blueprint{
+    background-image:
+      repeating-linear-gradient(0deg, rgba(15,35,56,0.05) 0 1px, transparent 1px 64px),
+      repeating-linear-gradient(90deg, rgba(15,35,56,0.05) 0 1px, transparent 1px 64px);
+  }
+
+  /* ---------- Services ---------- */
+  .services{background:var(--paper);}
+  .service-grid{
+    margin-top:48px;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:1px;background:var(--line-strong);border:1px solid var(--line-strong);
+  }
+  .service-card{
+    background:var(--paper-raised);padding:32px 28px;
+    display:flex;flex-direction:column;gap:16px;
+  }
+  .service-card svg{color:var(--horizon);}
+  .service-card h3{font-size:1.12rem;font-weight:700;}
+  .service-card p{color:var(--ink-soft);font-size:0.95rem;line-height:1.75;}
+
+  /* ---------- Stats ---------- */
+  .stats{background:var(--paper-raised);border-block:1px solid var(--line);}
+  .stat-grid{
+    margin-top:44px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:1px;background:var(--line);
+  }
+  .stat{background:var(--paper-raised);padding:26px 22px;}
+  .stat-num{
+    font-family:var(--font-mono);font-weight:600;font-variant-numeric:tabular-nums;
+    font-size:clamp(2.1rem,1.4rem + 2vw,3.1rem);color:var(--horizon-deep);line-height:1;
+  }
+  .stat-label{margin-top:10px;color:var(--ink-soft);font-size:0.88rem;}
+
+  /* ---------- Company profile ---------- */
+  .company{background:var(--paper);}
+  .company-grid{display:grid;gap:56px;grid-template-columns:1.1fr 1.4fr;align-items:start;}
+  @media (max-width:820px){.company-grid{grid-template-columns:1fr;gap:32px;}}
+  .profile{border-top:1px solid var(--line-strong);}
+  .profile-row{
+    display:grid;grid-template-columns:9.5em 1fr;gap:20px;
+    padding-block:16px;border-bottom:1px solid var(--line);
+  }
+  .profile-row dt{
+    font-family:var(--font-mono);font-size:0.78rem;color:var(--ink-faint);
+    letter-spacing:0.03em;padding-top:2px;
+  }
+  .profile-row dd{margin:0;font-size:0.96rem;color:var(--ink);}
+
+  /* ---------- History (ascending steps) ---------- */
+  .history{background:var(--paper-raised);border-top:1px solid var(--line);}
+  .history-list{margin-top:48px;border-left:1px solid var(--line-strong);}
+  .history-item{
+    position:relative;padding:18px 0 18px 32px;
+    margin-left:0;
+    border-bottom:1px solid var(--line);
+  }
+  .history-item:last-child{border-bottom:none;}
+  .history-item::before{
+    content:"";position:absolute;left:-5px;top:24px;width:9px;height:9px;
+    background:var(--horizon);border:2px solid var(--paper-raised);
+  }
+  .history-item{display:grid;grid-template-columns:6.5em 1fr;gap:20px;align-items:baseline;}
+  @media (max-width:560px){.history-item{grid-template-columns:1fr;gap:6px;}}
+  .history-year{font-family:var(--font-mono);color:var(--horizon-deep);font-size:0.92rem;}
+  .history-text{color:var(--ink);}
+  .history-item:nth-child(1){margin-left:0;}
+  .history-item:nth-child(2){margin-left:8px;}
+  .history-item:nth-child(3){margin-left:16px;}
+  .history-item:nth-child(4){margin-left:24px;}
+  .history-item:nth-child(5){margin-left:32px;}
+  .history-item:nth-child(6){margin-left:40px;}
+  .history-item:nth-child(7){margin-left:48px;}
+  @media (max-width:560px){.history-item{margin-left:0 !important;}}
+
+  /* ---------- Careers / Contact (dark band) ---------- */
+  .band-dark{background:var(--night-900);color:var(--night-text);}
+  .band-dark.deep{background:var(--night-950);}
+  .careers-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:48px;align-items:start;}
+  @media (max-width:820px){.careers-grid{grid-template-columns:1fr;}}
+  .careers h2{color:var(--night-text);}
+  .careers .lede{color:var(--night-mist);}
+  .role-list{border-top:1px solid rgba(237,242,246,0.16);margin-top:8px;}
+  .role-list li{
+    padding:16px 4px;border-bottom:1px solid rgba(237,242,246,0.16);
+    display:flex;justify-content:space-between;gap:12px;font-size:0.96rem;
+  }
+  .role-tag{font-family:var(--font-mono);font-size:0.74rem;color:var(--dawn-soft);}
+
+  .contact-row{
+    display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between;align-items:flex-end;
+    padding-top:56px;margin-top:56px;border-top:1px solid rgba(237,242,246,0.16);
+  }
+  .contact-row h2{color:var(--night-text);max-width:16ch;}
+  .contact-meta{color:var(--night-mist);font-size:0.9rem;margin-top:10px;}
+
+  /* ---------- Footer ---------- */
+  .site-footer{
+    background:var(--night-950);color:var(--night-mist);
+    border-top:1px solid rgba(237,242,246,0.12);
+    padding-block:40px;
+    padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));
+  }
+  .footer-grid{
+    display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;
+    align-items:center;font-size:0.82rem;
+  }
+  .footer-brand{display:flex;align-items:center;gap:10px;color:var(--night-text);}
+  .footer-brand svg{color:var(--dawn);}
+  .footer-links{display:flex;gap:22px;flex-wrap:wrap;}
+  .footer-links a{text-decoration:none;color:var(--night-mist);}
+  .footer-links a:hover{color:var(--night-text);}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a href="#top" class="brand">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <rect x="2" y="14" width="4" height="8"></rect>
+        <rect x="10" y="6" width="4" height="16"></rect>
+        <rect x="18" y="10" width="4" height="12"></rect>
+      </svg>
+      <span>
+        <span class="brand-name">SKYLINE TECHNOLOGIES</span>
+        <span class="brand-jp">株式会社スカイラインテクノロジーズ</span>
+      </span>
+    </a>
+    <nav class="nav-links" aria-label="主要ナビゲーション">
+      <a href="#services">事業内容</a>
+      <a href="#results">実績</a>
+      <a href="#company">会社概要</a>
+      <a href="#history">沿革</a>
+      <a href="#careers">採用情報</a>
+    </nav>
+    <a href="#contact" class="btn btn-primary nav-cta">お問い合わせ</a>
+  </div>
+
+  <div class="announce">
+    <div class="wrap announce-inner">
+      <span class="announce-label">NEWS</span>
+      <ul class="announce-list">
+        <li><time datetime="2026-09-10">2026.09.10</time><span>「Skyline Copilot」に音声入力機能を追加しました</span></li>
+        <li><time datetime="2026-08-01">2026.08.01</time><span>大阪支社を中之島オフィスへ移転しました</span></li>
+        <li><time datetime="2026-07-15">2026.07.15</time><span>夏季休業のお知らせ（8/13〜8/16）</span></li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero on-dark" id="top">
+    <div class="wrap">
+      <p class="hero-tag"><span>EST. 2014</span><span>TOKYO</span><span>SOFTWARE DESIGN &amp; ENGINEERING STUDIO</span></p>
+      <h1>コードで、<br>都市の稜線を描く。</h1>
+      <p class="hero-lede">スカイラインテクノロジーズは、受託開発から自社SaaSプロダクトまで、企業の成長の輪郭をともに描くソフトウェア開発チームです。</p>
+      <div class="hero-actions">
+        <a href="#services" class="btn btn-primary">事業内容を見る <span class="btn-arrow">→</span></a>
+        <a href="#careers" class="btn btn-ghost">採用情報</a>
+      </div>
+    </div>
+
+    <svg class="skyline" viewBox="0 0 1200 340" preserveAspectRatio="none" role="img" aria-label="夕景に浮かぶ都市のスカイラインのイラスト">
+      <!-- back layer -->
+      <g fill="#2B3E5C" opacity="0.55">
+        <rect x="0" y="250" width="140" height="90"></rect>
+        <rect x="160" y="280" width="110" height="60"></rect>
+        <rect x="290" y="220" width="160" height="120"></rect>
+        <rect x="470" y="270" width="100" height="70"></rect>
+        <rect x="590" y="200" width="180" height="140"></rect>
+        <rect x="790" y="260" width="120" height="80"></rect>
+        <rect x="930" y="240" width="150" height="100"></rect>
+        <rect x="1090" y="275" width="110" height="65"></rect>
+      </g>
+      <!-- mid layer -->
+      <g fill="#1C2C4A" opacity="0.85">
+        <rect x="-20" y="210" width="90" height="130"></rect>
+        <rect x="90" y="170" width="70" height="170"></rect>
+        <rect x="190" y="230" width="110" height="110"></rect>
+        <rect x="330" y="140" width="90" height="200"></rect>
+        <rect x="450" y="190" width="130" height="150"></rect>
+        <rect x="620" y="115" width="80" height="225"></rect>
+        <rect x="730" y="200" width="120" height="140"></rect>
+        <rect x="880" y="150" width="100" height="190"></rect>
+        <rect x="1010" y="220" width="140" height="120"></rect>
+        <rect x="1170" y="180" width="60" height="160"></rect>
+      </g>
+      <!-- front silhouette -->
+      <g fill="#0A1420">
+        <rect x="-10" y="160" width="80" height="180"></rect>
+        <rect x="60" y="200" width="100" height="140"></rect>
+        <rect x="170" y="120" width="60" height="220"></rect>
+        <rect x="240" y="170" width="130" height="170"></rect>
+        <rect x="390" y="80" width="90" height="260"></rect>
+        <rect x="490" y="150" width="150" height="190"></rect>
+        <rect x="660" y="40" width="70" height="300"></rect>
+        <rect x="740" y="130" width="140" height="210"></rect>
+        <rect x="900" y="90" width="100" height="250"></rect>
+        <rect x="1010" y="160" width="160" height="180"></rect>
+        <rect x="1190" y="190" width="40" height="150"></rect>
+      </g>
+      <!-- antenna + beacon on hero tower -->
+      <g>
+        <rect x="692" y="20" width="4" height="22" fill="#0A1420"></rect>
+        <circle class="beacon" cx="694" cy="18" r="3.2" fill="#F2A65C"></circle>
+      </g>
+      <!-- lit windows -->
+      <g>
+        <rect class="win" x="10" y="190" width="6" height="8"></rect>
+        <rect class="win blink" x="26" y="210" width="6" height="8"></rect>
+        <rect class="win" x="80" y="230" width="6" height="8"></rect>
+        <rect class="win blink2" x="190" y="150" width="6" height="8"></rect>
+        <rect class="win" x="206" y="175" width="6" height="8"></rect>
+        <rect class="win" x="270" y="200" width="6" height="8"></rect>
+        <rect class="win blink" x="290" y="230" width="6" height="8"></rect>
+        <rect class="win" x="410" y="110" width="6" height="8"></rect>
+        <rect class="win blink2" x="425" y="140" width="6" height="8"></rect>
+        <rect class="win" x="520" y="185" width="6" height="8"></rect>
+        <rect class="win" x="540" y="215" width="6" height="8"></rect>
+        <rect class="win blink" x="675" y="70" width="6" height="8"></rect>
+        <rect class="win" x="675" y="95" width="6" height="8"></rect>
+        <rect class="win blink2" x="770" y="160" width="6" height="8"></rect>
+        <rect class="win" x="790" y="190" width="6" height="8"></rect>
+        <rect class="win" x="930" y="120" width="6" height="8"></rect>
+        <rect class="win blink" x="950" y="150" width="6" height="8"></rect>
+        <rect class="win" x="1040" y="190" width="6" height="8"></rect>
+        <rect class="win blink2" x="1060" y="215" width="6" height="8"></rect>
+        <rect class="win" x="1120" y="220" width="6" height="8"></rect>
+      </g>
+    </svg>
+  </section>
+
+  <section class="services blueprint" id="services">
+    <div class="wrap">
+      <p class="eyebrow">WHAT WE BUILD</p>
+      <h2 class="h2">事業内容</h2>
+      <p class="lede">要件定義から実装、リリース後の運用まで。事業のフェーズに合わせて4つの領域を横断的に支援します。</p>
+
+      <div class="service-grid">
+        <div class="service-card">
+          <svg width="34" height="34" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 9 5 16l6 7"></path>
+            <path d="M21 9l6 7-6 7"></path>
+            <path d="M18 7l-4 18"></path>
+          </svg>
+          <h3>受託開発</h3>
+          <p>要件定義から設計・実装・運用保守まで一気通貫。事業の伸びしろを止めない開発体制で伴走します。</p>
+        </div>
+        <div class="service-card">
+          <svg width="34" height="34" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M16 5 4 11l12 6 12-6-12-6Z"></path>
+            <path d="M4 17l12 6 12-6"></path>
+            <path d="M4 23l12 6 12-6"></path>
+          </svg>
+          <h3>プロダクト開発（SaaS）</h3>
+          <p>自社開発の業務基盤SaaS「Compass」を中心に、0→1のプロダクト開発を数多く手がけています。</p>
+        </div>
+        <div class="service-card">
+          <svg width="34" height="34" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 22a5.5 5.5 0 0 1-1-10.9A7 7 0 0 1 21.5 9 5.5 5.5 0 0 1 23 22H9Z"></path>
+            <path d="M12 26v-3M16 26v-3M20 26v-3"></path>
+          </svg>
+          <h3>クラウド・インフラ構築</h3>
+          <p>AWS / GCPを中心に、負荷とコストの両方に強いスケーラブルな基盤をゼロから設計します。</p>
+        </div>
+        <div class="service-card">
+          <svg width="34" height="34" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="7" cy="8" r="3"></circle>
+            <circle cx="25" cy="8" r="3"></circle>
+            <circle cx="16" cy="24" r="3"></circle>
+            <path d="M9.5 9.8 14 21.5M22.5 9.8 18 21.5"></path>
+          </svg>
+          <h3>DXコンサルティング</h3>
+          <p>業務プロセスの可視化と自動化設計により、現場に根づくDXの実行計画まで落とし込みます。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" id="results">
+    <div class="wrap">
+      <p class="eyebrow">BY THE NUMBERS</p>
+      <h2 class="h2">数字で見るスカイライン</h2>
+
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-num">12期目</div>
+          <div class="stat-label">創業から（2014年〜）</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">320<span style="font-size:0.55em;">社+</span></div>
+          <div class="stat-label">導入企業数</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">96<span style="font-size:0.55em;">名</span></div>
+          <div class="stat-label">エンジニア数</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">98<span style="font-size:0.55em;">%</span></div>
+          <div class="stat-label">契約継続率</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="company blueprint" id="company">
+    <div class="wrap company-grid">
+      <div>
+        <p class="eyebrow">COMPANY</p>
+        <h2 class="h2">会社概要</h2>
+        <p class="lede">「その街に必要なソフトウェアを、その街の目線で作る」を掲げ、東京・大阪の2拠点で開発に取り組んでいます。</p>
+      </div>
+      <dl class="profile">
+        <div class="profile-row">
+          <dt>商号</dt>
+          <dd>株式会社スカイラインテクノロジーズ</dd>
+        </div>
+        <div class="profile-row">
+          <dt>設立</dt>
+          <dd>2014年4月8日</dd>
+        </div>
+        <div class="profile-row">
+          <dt>代表者</dt>
+          <dd>代表取締役CEO　空野 陸</dd>
+        </div>
+        <div class="profile-row">
+          <dt>所在地</dt>
+          <dd>東京都渋谷区桜丘町6-20 スカイラインビル8F<br>（大阪支社：大阪市北区中之島4-3）</dd>
+        </div>
+        <div class="profile-row">
+          <dt>資本金</dt>
+          <dd>3,000万円</dd>
+        </div>
+        <div class="profile-row">
+          <dt>従業員数</dt>
+          <dd>128名（2026年4月現在）</dd>
+        </div>
+        <div class="profile-row">
+          <dt>事業内容</dt>
+          <dd>ソフトウェア受託開発、自社プロダクト開発、クラウドインフラ構築、DXコンサルティング</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="history" id="history">
+    <div class="wrap">
+      <p class="eyebrow">OUR HISTORY</p>
+      <h2 class="h2">沿革</h2>
+      <p class="lede">創業から一段ずつ、スカイラインを高くしてきた12年間の記録です。</p>
+
+      <div class="history-list">
+        <div class="history-item">
+          <span class="history-year">2014.04</span>
+          <span class="history-text">東京都渋谷区にて創業。受託開発事業を開始。</span>
+        </div>
+        <div class="history-item">
+          <span class="history-year">2016.09</span>
+          <span class="history-text">社員数10名を突破。エンタープライズ向け案件の受託を本格化。</span>
+        </div>
+        <div class="history-item">
+          <span class="history-year">2018.11</span>
+          <span class="history-text">自社SaaS「Compass」正式リリース。プロダクト開発事業を開始。</span>
+        </div>
+        <div class="history-item">
+          <span class="history-year">2020.05</span>
+          <span class="history-text">大阪支社を開設。関西エリアのクライアント対応を強化。</span>
+        </div>
+        <div class="history-item">
+          <span class="history-year">2022.03</span>
+          <span class="history-text">シリーズA資金調達を実施。クラウドインフラ事業に参入。</span>
+        </div>
+        <div class="history-item">
+          <span class="history-year">2024.07</span>
+          <span class="history-text">導入企業数300社を突破。従業員数120名規模に。</span>
+        </div>
+        <div class="history-item">
+          <span class="history-year">2026.04</span>
+          <span class="history-text">生成AI活用プロダクト「Skyline Copilot」の提供を開始。</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band-dark" id="careers">
+    <div class="wrap careers careers-grid">
+      <div>
+        <p class="eyebrow">CAREERS</p>
+        <h2 class="h2">次の稜線を、<br>一緒に描く仲間を募集中です。</h2>
+        <p class="lede">職種・経験を問わず、まずはカジュアルにお話しできる機会を歓迎しています。</p>
+        <div class="hero-actions" style="margin-top:28px;">
+          <a href="#contact" class="btn btn-primary">採用情報について問い合わせる <span class="btn-arrow">→</span></a>
+        </div>
+      </div>
+      <ul class="role-list">
+        <li><span>バックエンドエンジニア</span><span class="role-tag">Go / Ruby</span></li>
+        <li><span>フロントエンドエンジニア</span><span class="role-tag">React / TypeScript</span></li>
+        <li><span>SRE / インフラエンジニア</span><span class="role-tag">AWS / GCP</span></li>
+        <li><span>プロダクトマネージャー</span><span class="role-tag">Compass事業部</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="band-dark deep" id="contact">
+    <div class="wrap">
+      <div class="contact-row">
+        <div>
+          <p class="eyebrow">CONTACT</p>
+          <h2 class="h2">プロジェクトのご相談、<br>お待ちしています。</h2>
+          <p class="contact-meta">対応時間：平日 10:00–18:00（JST）</p>
+        </div>
+        <a href="mailto:info@skyline-tech.jp" class="btn btn-primary">メールで相談する <span class="btn-arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <rect x="2" y="14" width="4" height="8"></rect>
+        <rect x="10" y="6" width="4" height="16"></rect>
+        <rect x="18" y="10" width="4" height="12"></rect>
+      </svg>
+      <span>株式会社スカイラインテクノロジーズ</span>
+    </div>
+    <nav class="footer-links" aria-label="フッターナビゲーション">
+      <a href="#services">事業内容</a>
+      <a href="#company">会社概要</a>
+      <a href="#history">沿革</a>
+      <a href="#careers">採用情報</a>
+      <a href="#contact">お問い合わせ</a>
+    </nav>
+    <span>© 2026 Skyline Technologies, Inc.</span>
+  </div>
+</footer>
+
+</body>
+</html>
